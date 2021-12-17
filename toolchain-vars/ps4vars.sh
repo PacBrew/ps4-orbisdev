@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 export PACBREW=/opt/pacbrew
-export ORBISDEV=${PACBREW}/ps4/toolchain
-export PS4SDK=${PACBREW}/ps4/toolchain
+export ORBISDEV=${PACBREW}/ps4/orbisdev
+export PS4SDK=${PACBREW}/ps4/orbisdev
 
 #export TOOL_PREFIX=orbis-
 export CC=${ORBISDEV}/bin/clang

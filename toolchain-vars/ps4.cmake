@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.7)
 ###################################################################
 
 if(NOT DEFINED ENV{ORBISDEV})
-	set(ORBISDEV /opt/pacbrew/ps4/toolchain)
+	set(ORBISDEV /opt/pacbrew/ps4/orbisdev)
 else()
 	set(ORBISDEV $ENV{ORBISDEV})
 endif()
