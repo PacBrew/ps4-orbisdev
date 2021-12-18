@@ -1,0 +1,24 @@
+# Maintainer: cpasjuste <cpasjuste@gmail.com>
+
+pkgname=ps4-orbisdev-pkgtools
+pkgver=643477263b2644e0803e0f58b8726ea4e3f3b7d4
+pkgrel=1
+pkgdesc='pkg tools for ps4'
+arch=('any')
+url='https://github.com/maxton/LibOrbisPkg'
+license=('GNU GPL')
+options=(!strip libtool)
+source=("https://github.com/maxton/LibOrbisPkg/archive/$pkgver.zip")
+sha256sums=('8f3b7b02cc28412f1fb740a2e1f47b25902bca95de063ea043d4f95b3c960ae0')
+groups=('ps4-orbisdev')
+
+build() {
+  cd LibOrbisPkg-$pkgver
+  dotnet publish -c Release LibOrbisPkg.Core.sln
+}
+
+package() {
+  cd LibOrbisPkg-$pkgver
+  install -d ${pkgdir}/opt/pacbrew/ps4/orbisdev/bin/pkgtools
+  cp -R PkgTool.Core/bin/Release/netcoreapp3.0/publish/. ${pkgdir}/opt/pacbrew/ps4/orbisdev/bin/pkgtools/
+}
