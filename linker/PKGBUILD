@@ -1,6 +1,6 @@
 # Maintainer: cpasjuste <cpasjuste@gmail.com>
 
-pkgname=ps4-linker-orbisdev
+pkgname=ps4-orbisdev-linker
 pkgver=1.0.0
 pkgrel=1
 pkgdesc='linker stuff for ps4'
@@ -13,8 +13,8 @@ sha256sums=(
   '13af72e54de0be70868924d6055b60ffa6c14990941964126099d73e76c0a5da'
   '9c73c5656c7819f29f7c3f2114ebb2fec4e1e30338a20609a2e9aa409b0c90c7'
 )
-depends=('ps4-clang-orbisdev')
-groups=('ps4-toolchain-orbisdev')
+depends=('ps4-orbisdev-clang')
+groups=('ps4-orbisdev')
 
 build() {
   

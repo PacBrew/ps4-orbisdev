@@ -1,6 +1,6 @@
 # Maintainer: cpasjuste <cpasjuste@gmail.com>
 
-pkgname=ps4-lief-orbisdev
+pkgname=ps4-orbisdev-lief
 pkgver=23c1f67445e3d1e49a2ac8cb451bc24657b7dede
 pkgrel=1
 pkgdesc='lief (orbis-elf-create) for ps4'
@@ -10,7 +10,7 @@ license=('Apache')
 options=(!strip libtool)
 source=("https://github.com/orbisdev/LIEF/archive/$pkgver.zip")
 sha256sums=('faed0a6199e6f6132b15e888330380a82101577ac0044a441c1e58fed9439d44')
-groups=('ps4-toolchain-orbisdev')
+groups=('ps4-orbisdev')
 
 build() {
   cd LIEF-$pkgver

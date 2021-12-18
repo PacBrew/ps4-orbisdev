@@ -1,6 +1,6 @@
 # Maintainer: cpasjuste <cpasjuste@gmail.com>
 
-pkgname=ps4-libgen-orbisdev
+pkgname=ps4-orbisdev-libgen
 pkgver=snapshot_2021_04_01_165149
 pkgrel=1
 pkgdesc='lib generator for ps4'
@@ -10,8 +10,8 @@ license=('GNU GPL')
 options=(!strip libtool)
 source=("https://github.com/orbisdev/orbis-libs-gen/releases/download/$pkgver/lib_s.tar.gz")
 sha256sums=('107c062002a4b9b371680477374f2388bdf5f1edfbbec281bf71a17e57f55a65')
-depends=('ps4-binutils-orbisdev' 'ps4-clang-orbisdev')
-groups=('ps4-toolchain-orbisdev')
+depends=('ps4-orbisdev-clang')
+groups=('ps4-orbisdev')
 
 build() {
   cd lib_s

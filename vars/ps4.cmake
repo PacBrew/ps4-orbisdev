@@ -46,7 +46,7 @@ set(PS4_COMMON_FLAGS  "${PS4_ARCH_SETTINGS} -D__PS4__ -D__ORBIS__ -I${ORBISDEV}/
 set(PS4_LIB_DIRS      "-L${ORBISDEV}/lib -L${ORBISDEV}/usr/lib")
 
 set(CMAKE_C_FLAGS_INIT   "${PS4_COMMON_FLAGS}")
-set(CMAKE_CXX_FLAGS_INIT "${PS4_COMMON_FLAGS} -I${ORBISDEV}/usr/include/c++/v1")
+set(CMAKE_CXX_FLAGS_INIT "${PS4_COMMON_FLAGS} -frtti -fexceptions -I${ORBISDEV}/usr/include/c++/v1")
 set(CMAKE_ASM_FLAGS_INIT "${PS4_COMMON_FLAGS}")
 
 set(CMAKE_EXE_LINKER_FLAGS_INIT "${PS4_ARCH_SETTINGS} ${PS4_LIB_DIRS} -Wl,--gc-sections,--gc-keep-exported")

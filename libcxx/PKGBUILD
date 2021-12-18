@@ -1,6 +1,6 @@
 # Maintainer: cpasjuste <cpasjuste@gmail.com>
 
-pkgname=ps4-libcxx-orbisdev
+pkgname=ps4-orbisdev-libcxx
 pkgver=13.0.0
 pkgrel=1
 pkgdesc='cxx support for ps4'
@@ -13,8 +13,8 @@ sha256sums=(
   '6075ad30f1ac0e15f07c1bf062c1e1268c241d674f11bd32cdf0e040c71f2bf3'
   '1568708df697ee3ed954fca447c49c217a7aba1e1f227fef6e0fc1da43d49dcc'
 )
-depends=('ps4-clang-orbisdev')
-groups=('ps4-toolchain-orbisdev')
+depends=('ps4-orbisdev-clang' 'ps4-orbisdev-headers')
+groups=('ps4-orbisdev')
 
 build() {
   cd llvm-project-$pkgver.src
@@ -79,7 +79,7 @@ build() {
   cmake \
     -DCMAKE_C_COMPILER=/opt/pacbrew/ps4/orbisdev/bin/clang \
     -DCMAKE_CXX_COMPILER=/opt/pacbrew/ps4/orbisdev/bin/clang++ \
-    -DCMAKE_CXX_FLAGS="-D_BSD_SOURCE -frtti -fexceptions " \
+    -DCMAKE_CXX_FLAGS="-D_BSD_SOURCE -frtti -fexceptions" \
     -DLIBCXXABI_TARGET_TRIPLE=x86_64-scei-ps4 \
     -DCMAKE_SHARED_LINKER_FLAGS="-L../../libunwind/build/lib" \
     -DLIBCXXABI_USE_LLVM_UNWINDER=ON \
