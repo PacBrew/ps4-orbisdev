@@ -11,12 +11,12 @@ options=(!strip)
 groups=('ps4-orbisdev')
 
 sha256sums=(
-  '1de9f4c0d65e129ab395a31a65d6b1be747f22680729bca3f5ea255c0c3dc01c' # ps4vars.sh
+  '3d19e85e019f37fee421b946d8dfc464fb7cd3ac5da6748f0903cdf9c9b4e3e7' # ps4vars.sh
   'bbe5e29b512c3b4a05f6877c234265f07f7a76f67956e9fce426a64ab8498e64' # ps4sdk.mk
   '0b65b74223cc300dc60d5c20bc81a4cf2b8682932f90b9cb4abaf9520ba8d704' # ps4sdklib.mk
   '55f4359c821eea63a147b10bb0b34575b9f9067689dd1c243ada7998af1266a2' # ps4_elf_sce.mk
   'b0599aff45e9a7b5dba7d9923d10b9fd9c9691aa97d225ee549ee4cc71ef4bfb' # ps4_lib.mk
-  '3772a8eeb0752759a3efd45a0f8c72540d73a21995d75294ee37e2a065790de8' # ps4.cmake
+  'c75a21bbae9e0207d2a779f375c42dfb71be523f6522d5ee28b76e4e55e835b1' # ps4.cmake
   '9d522e3ae3cd3a817ea3af56dbb5444ce749e586edd70cd59ef15a126de40324' # orbis-cmake
 )
 
