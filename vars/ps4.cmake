@@ -38,7 +38,7 @@ set(BUILD_SHARED_LIBS OFF CACHE INTERNAL "Shared libs not available")
 ###################################################################
 
 set(PS4_ARCH_SETTINGS "--target=x86_64-scei-ps4")
-set(PS4_COMMON_INCLUDES "-I${ORBISDEV}/usr/include -I${ORBISDEV}/usr/include/orbis -isystem ${ORBISDEV} -isysroot ${ORBISDEV}")
+set(PS4_COMMON_INCLUDES "-I${ORBISDEV}/usr/include -I${ORBISDEV}/usr/include/orbis -isysroot ${ORBISDEV} -isystem ${ORBISDEV}/include")
 set(PS4_COMMON_FLAGS "${PS4_ARCH_SETTINGS} -D__PS4__ -D__ORBIS__ ${PS4_COMMON_INCLUDES}")
 set(PS4_COMMON_LIBS "-L${ORBISDEV}/lib -L${ORBISDEV}/usr/lib")
 
@@ -59,28 +59,46 @@ if (NOT PKG_CONFIG_EXECUTABLE)
 endif ()
 
 function(add_self project)
+    set(AUTH_INFO "000000000000000000000000001C004000FF000000000080000000000000000000000000000000000000008000400040000000000000008000000000000000080040FFFF000000F000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000")
     add_custom_command(
             OUTPUT "${project}.self"
             COMMAND ${CMAKE_COMMAND} -E env "ORBISDEV=${ORBISDEV}" "${ORBISDEV}/bin/orbis-elf-create" "${project}" "${project}.oelf"
-            COMMAND "python" "${ORBISDEV}/bin/make_fself.py" "--auth-info" "000000000000000000000000001C004000FF000000000080000000000000000000000000000000000000008000400040000000000000008000000000000000080040FFFF000000F000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000" "${project}.oelf" "${project}.self"
+            COMMAND "python" "${ORBISDEV}/bin/make_fself.py" "--auth-info" "${AUTH_INFO}" "${project}.oelf" "${project}.self"
             VERBATIM
+            DEPENDS "${project}"
     )
     add_custom_target(
             "${project}_self" ALL
-            DEPENDS "${project}"
             DEPENDS "${project}.self"
     )
 endfunction()
 
-function(add_pkg project pkgdir)
+function(add_pkg project pkgdir title-id title version)
     add_custom_command(
             OUTPUT "${project}.pkg"
-            COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${project}.self" "${pkgdir}/eboot.bin"
-            COMMAND "${ORBISDEV}/bin/pkgTool" "pkg_build" "${pkgdir}/Project.gp4" "${pkgdir}/pkg"
+            # copy self to pkgdir (eboot)
+            COMMAND ${CMAKE_COMMAND} -E copy "${project}.self" "${pkgdir}/eboot.bin"
+            # update sfo (backup first)
+            COMMAND ${CMAKE_COMMAND} -E copy "${pkgdir}/sce_sys/param.sfo" "${pkgdir}/sce_sys/param.sfo.ori"
+            COMMAND "${ORBISDEV}/bin/orbis-sfo" "${pkgdir}/sce_sys/param.sfo" "-w" "content_id" "IV0003-${title-id}_00-${title-id}0000000"
+            COMMAND "${ORBISDEV}/bin/orbis-sfo" "${pkgdir}/sce_sys/param.sfo" "-w" "title_id" "${title-id}"
+            COMMAND "${ORBISDEV}/bin/orbis-sfo" "${pkgdir}/sce_sys/param.sfo" "-w" "title" "${title}"
+            COMMAND "${ORBISDEV}/bin/orbis-sfo" "${pkgdir}/sce_sys/param.sfo" "-w" "version" "${version}"
+            COMMAND "${ORBISDEV}/bin/orbis-sfo" "${pkgdir}/sce_sys/param.sfo" "-w" "app_ver" "${version}"
+            # generate gp4 file
+            COMMAND "${ORBISDEV}/bin/gp4gen" "--content-id" "IV0003-${title-id}_00-${title-id}0000000" "--files" "sce_sys/param.sfo,sce_sys/pic1.png,sce_sys/icon0.png,sce_sys/pic0.png,eboot.bin"
+            COMMAND ${CMAKE_COMMAND} -E copy "homebrew.gp4" "${pkgdir}"
+            COMMAND ${CMAKE_COMMAND} -E env "ORBISDEV=${ORBISDEV}" "${ORBISDEV}/bin/pkgTool" "pkg_build" "${pkgdir}/homebrew.gp4" "${CMAKE_CURRENT_BINARY_DIR}"
+            # cleanup
+            COMMAND ${CMAKE_COMMAND} -E remove -f "${pkgdir}/eboot.bin"
+            COMMAND ${CMAKE_COMMAND} -E remove -f "${pkgdir}/homebrew.gp4"
+            COMMAND ${CMAKE_COMMAND} -E remove -f "${pkgdir}/sce_sys/param.sfo"
+            COMMAND ${CMAKE_COMMAND} -E rename "${pkgdir}/sce_sys/param.sfo.ori" "${pkgdir}/sce_sys/param.sfo"
             VERBATIM
+            DEPENDS "${project}.self"
     )
     add_custom_target(
             "${project}_pkg" ALL
-            DEPENDS "${project}_self"
+            DEPENDS "${project}.pkg"
     )
 endfunction()

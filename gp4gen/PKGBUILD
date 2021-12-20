@@ -1,0 +1,24 @@
+# Maintainer: cpasjuste <cpasjuste@gmail.com>
+
+pkgname=ps4-orbisdev-gp4gen
+pkgver=c3b660e231c149db8aeb5539b6f0fd18c908971b
+pkgrel=1
+pkgdesc='Deflate compression method library'
+arch=('any')
+url='https://github.com/orbisdev/orbisdev-gp4gen'
+license=('GPL')
+options=(!strip libtool staticlibs)
+source=("https://github.com/orbisdev/orbisdev-gp4gen/archive/$pkgver.zip")
+sha256sums=('d6105ac3eb22ac6cf01e3cb0976cc87bb5a9f2bfa0ae58950970905d607b37e5')
+groups=('ps4-orbisdev')
+
+build() {
+  cd orbisdev-gp4gen-$pkgver
+  ORBISDEV=/opt/pacbrew/ps4/orbisdev make
+}
+
+package() {
+  cd orbisdev-gp4gen-$pkgver
+  install -d ${pkgdir}/opt/pacbrew/ps4/orbisdev/bin
+  install -Dm755 gp4gen ${pkgdir}/opt/pacbrew/ps4/orbisdev/bin
+}
