@@ -1,0 +1,44 @@
+# Maintainer: cpasjuste <cpasjuste@gmail.com>
+
+pkgname=ps4-orbisdev-libgen-900
+pkgver=9.00
+pkgrel=1
+pkgdesc='libs for ps4'
+arch=('any')
+url='https://github.com/idc/ps4libdoc'
+license=('GNU GPL')
+options=(!strip libtool)
+source=(
+  "https://github.com/idc/ps4libdoc/archive/refs/heads/$pkgver.zip" # ps4libdoc
+  "https://github.com/OpenOrbis/orbis-lib-gen/archive/c3b1343aa1b9dc001c4b5d45091143a3eb24b5f2.zip" # orbis-lib-gen
+)
+sha256sums=(
+  '7d67c743cb5fa70db3fc55ebdde93b09da08799b929bf1f2fbf22d96d7bb2d3f'
+  '2a642910a5067678c4c35bab945acf697aa7ecd1228bdcb52336876298c47dd5'
+)
+conflicts=('ps4-orbisdev-libgen')
+
+build() {
+  cd orbis-lib-gen-c3b1343aa1b9dc001c4b5d45091143a3eb24b5f2
+  python generate.py ../ps4libdoc-9.00/system/common/lib
+  # TODO: fix this
+  #sed -i 's|gcc -ffreestanding -nostdlib -fno-builtin -fPIC|/opt/pacbrew/ps4/orbisdev/bin/clang --target=x86_64-scei-ps4 -nostdlib -m64|g' gen_makefile.py
+  sed -i 's|gcc -ffreestanding -nostdlib -fno-builtin -fPIC|gcc -nostdlib -m64|g' gen_makefile.py
+  sed -i 's|gcc -shared -ffreestanding -nostdlib -fno-builtin|/opt/pacbrew/ps4/orbisdev/bin/orbis-ld --eh-frame-hdr -Bshareable --enable-new-dtags|g' gen_makefile.py
+  sed -i 's|\.so|_stub\.so|g' gen_makefile.py
+  
+  python gen_makefile.py
+  cd build && make -j $(getconf _NPROCESSORS_ONLN)
+}
+
+package() {
+  cd orbis-lib-gen-c3b1343aa1b9dc001c4b5d45091143a3eb24b5f2/build/out
+  ln -sf libSceLibcInternal_stub.so libc.so
+  ln -sf libSceLibcInternal_stub.so libm.so
+  ln -sf libSceLibcInternal_stub.so libdl.so
+  ln -sf libkernel_stub.so libkernel_sys_stub.so
+  ln -sf libkernel_stub.so libpthread.so
+  
+  mkdir -p "$pkgdir"/opt/pacbrew/ps4/orbisdev/usr/lib
+  cp *.so "$pkgdir"/opt/pacbrew/ps4/orbisdev/usr/lib
+}
